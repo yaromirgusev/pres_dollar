@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ДОЛЛАР: кеш, редизайн, рынок</title>
+<style>
+  :root{
+    --bg-1:#0b0f14; --bg-2:#0c2020;
+    --ink:#e8f0f2; --muted:#a8b4b7;
+    --accent:#45d19f; --accent-2:#00c2ff;
+    --warn:#ffd166; --bad:#ff6b6b; --code:#101821;
+    --shadow: 0 10px 30px rgba(0,0,0,.45); --radius:18px;
+  }
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    background: radial-gradient(1200px 800px at 80% -10%, rgba(69,209,159,.18), transparent 60%),
+                radial-gradient(900px 500px at -10% 120%, rgba(0,194,255,.14), transparent 60%),
+                linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    font:500 18px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    overflow:hidden;
+  }
+  .deck{height:100%; display:grid; grid-template-rows: 1fr auto}
+  .slides{height:100%; position:relative}
+  .slide{
+    position:absolute; inset:0; padding:64px 80px;
+    display:flex; flex-direction:column; justify-content:center; gap:28px;
+    opacity:0; transform: translateY(20px) scale(.98); transition:.45s ease;
+  }
+  .slide.is-current{opacity:1; transform:none}
+  .kicker{ text-transform:uppercase; font-weight:700; font-size:14px; letter-spacing:.28em; color:var(--accent); display:inline-flex; align-items:center; gap:.6em}
+  .kicker::before{content:""; width:36px; height:3px; background:linear-gradient(90deg, var(--accent), transparent); border-radius:3px}
+  h1,h2,h3{margin:0; line-height:1.1; letter-spacing:.2px; text-shadow:0 4px 24px rgba(0,0,0,.4)}
+  h1.display{font-size:68px} h2.display{font-size:48px}
+  p{margin:0; color:#def2f0cc; max-width:1100px}
+  .muted{color:var(--muted)}
+  .grid{display:grid; gap:18px} .cols-2{grid-template-columns:1.1fr 1fr}
+  .card{background:rgba(8,12,16,.55); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+  .bullet{display:flex; gap:14px} .dot{width:12px; height:12px; margin-top:.6em; border-radius:3px; background:linear-gradient(180deg, var(--accent), var(--accent-2))}
+  .tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px}
+  .tile{padding:20px; border-radius:16px; border:1px solid rgba(255,255,255,.1); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02))}
+  .tile .label{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.18em}
+  .tile .value{font-size:40px; font-weight:800; line-height:1.1; background:linear-gradient(90deg,#fff,#a9ffe2); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .pill{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:999px; backdrop-filter: blur(6px)}
+  .footer{height:64px; display:flex; align-items:center; justify-content:space-between; padding:10px 18px; gap:18px; background:linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.25)); border-top:1px solid rgba(255,255,255,.06)}
+  .brand{display:flex; align-items:center; gap:10px} .brand .dotL{width:10px; height:10px; border-radius:3px; background:linear-gradient(180deg, var(--accent), var(--accent-2))}
+  .progress{position:relative; flex:1; height:8px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden}
+  .progress .bar{position:absolute; inset:0; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 0 24px rgba(0,194,255,.45)}
+  .kbd{padding:6px 10px; border:1px solid rgba(255,255,255,.22); border-bottom-width:3px; border-radius:8px; background: rgba(15,20,26,.4); font-weight:700; font-size:12px}
+  /* Images panel */
+  .img-panel{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  .img-card{background:rgba(8,12,16,.55); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:12px; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center}
+  .img-card img{max-width:100%; max-height:62vh; border-radius:12px; display:block}
+  .quote{background:rgba(255,255,255,.04); border-left:4px solid var(--accent); padding:14px 16px; border-radius:10px}
+  @media (max-width:980px){ .slide{padding:40px 24px} h1.display{font-size:44px} h2.display{font-size:34px} .tiles{grid-template-columns:1fr 1fr} .cols-2{grid-template-columns:1fr} .img-panel{grid-template-columns:1fr} }
+  @media print{ body{overflow:visible} .slide{position:static; opacity:1; transform:none; page-break-after:always} .footer,.controls{display:none} }
+</style>
+</head>
+<body>
+<div class="deck" role="application" aria-label="Dollar slides">
+  <div class="slides">
+
+    <!-- 0. Title -->
+    <section class="slide is-current" aria-label="Title">
+      <div class="kicker">Деньги • USD</div>
+      <h1 class="display">ДОЛЛАР: КЕШ, РЕДИЗАЙН, РЫНОК</h1>
+      <p class="muted">Развернутый разбор: объем наличности, мотивы и механика редизайна, уровни защиты и практические различия в обращении старых и новых серий.</p>
+      <div class="tiles" aria-label="Key stats">
+        <div class="tile"><div class="label">Наличные в обращении</div><div class="value">≈ $2.41 трлн</div><div class="muted">конец сентября 2025</div></div>
+        <div class="tile"><div class="label">Опорный номинал</div><div class="value">$100</div><div class="muted">основной носитель стоимости</div></div>
+        <div class="tile"><div class="label">Новый дизайн</div><div class="value">с 2026</div><div class="muted">$10 — первая волна</div></div>
+      </div>
+      <!-- Авторы -->
+      <div aria-label="Authors" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:100px; margin-left:985px;">
+        <div class="pill">Авторы: Матвей Савченков, Гусев Яромир</div>
+      </div>
+    </section>
+	
+	<!-- 5. Wholesale vs Retail (kept concise) -->
+    <section class="slide" aria-label="Wholesale vs Retail">
+      <div class="kicker">Рынок • микроструктура</div>
+      <h2 class="display">Опт против розницы</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p>Оптовый слой межбанка формирует базовую цену при узких спрэдах; при шоках спрэды расширяются из‑за роста риска и дефицита встречных заявок.</p></div>
+          <div class="bullet"><div class="dot"></div><p>Интервенции и оповещения ориентируются на оптовую ликвидность, откуда цена транслируется вниз по цепочке поставщиков наличности.</p></div>
+        </div>
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p>В рознице добавляются надбавки за логистику, кассовые риски, AML/KYC и обработку, поэтому конечный курс может существенно отличаться от межбанковского.</p></div>
+          <div class="bullet"><div class="dot"></div><p>В периоды новостей и вне ядра торговых часов розничные спрэды расширяются, а пересмотры курсов участятся.</p></div>
+        </div>
+      </div>
+    </section>
+	
+	<!-- 2. Cash stock -->
+    <section class="slide" aria-label="Cash stock">
+      <div class="kicker">Наличные • масштаб</div>
+      <h2 class="display">Сколько наличных USD в мире?</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p>В обращении около ≈ $2.41 трлн на конец сентября 2025; это выше ≈ $2.323 трлн на конец 2024 и существенно выше доковидного уровня 2019; тренд долгосрочно растущий с ускорениями в периоды стресса и последующим замедлением.</p></div>
+          <div class="bullet"><div class="dot"></div><p>Существенная доля стоимости сосредоточена в $100, при этом значительная часть обращения физически находится за пределами США, что отражает функцию сбережения и международного обращения.</p></div>
+        </div>
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p>В периоды неопределенности усиливается «превентивный» и «убежищный» спрос на наличность, несмотря на рост безналичных платежей.</p></div>
+          <div class="bullet"><div class="dot"></div><p>Глобальное удержание банкнот порождает эффект сеньоража и поддерживает роль доллара как мировой наличной резервной валюты.</p></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 1. Charts -->
+    <section class="slide" aria-label="Charts">
+      <div class="kicker">Графики • вложения</div>
+      <h2 class="display">Доллары в обращении</h2>
+      <div class="img-panel">
+        <div class="img-card"><img src="image.png" alt="Доллары в обращении, 15 лет — линейный график"></div>
+        <div class="img-card"><img src="currency_chart.png" alt="Наличные доллары в обращении, 1917–2025 — логарифмический/линейный тренд"></div>
+      </div>
+    </section>
+
+    
+			
+    <!-- 3. Why redesign (expanded) -->
+    <section class="slide" aria-label="Why redesign">
+      <div class="kicker">Редизайн • мотивы</div>
+      <h2 class="display">Зачем вообще проводят редизайн доллара</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p><strong>Сдерживание подделок.</strong> : Основное назначение редизайна —  сдерживание подделок. Банкноты должны быть устойчивы к постоянно усложняющимся атакам фальшивомонетчиков.</p></div>
+          <div class="bullet"><div class="dot"></div><p><strong>Реакция на технологический прогресс.</strong> Доступность высококачественной печати и оптических трюков у фальшивомонетчиков требует регулярного обновления публичных и машинных признаков, чтобы при тех же привычных сценариях проверки повысить вероятность выявления подделки с первого взгляда и первого прохода в машине.</p></div>
+          <div class="bullet"><div class="dot"></div><p><strong>Доверие и стабильность.</strong> Защищенные банкноты — это не только про кассовую дисциплину; они поддерживают доверие к валюте США, снижают операционные риски в глобальных цепочках наличного обращения и тем самым работают на финансовую стабильность.</p></div>
+        </div>
+        <div class="card">
+          <div class="bullet"><div class="dot"></div><p><strong>Функциональность.</strong> Перед массовым выпуском проводится подготовка инфраструктуры обработки: банкоматы, сортировщики, детекторы, терминалы и кассовые машины в количестве 10+ миллионов устройств по миру должны без сбоев распознавать и верифицировать новые серии с первого дня.</p></div>
+          <div class="bullet"><div class="dot"></div><p><strong>Скорость верификации для всех.</strong> Комбинация явных признаков (видимых публике) и скрытых (для машин/экспертов) позволяет ускорить обслуживание, понизить долю «сомнительных» купюр в обороте и уменьшить транзакционные издержки бизнеса.</p></div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <!-- 6. New vs old notes — full quotes -->
+    <section class="slide" aria-label="New vs old">
+      <div class="kicker">Практика • цитаты</div>
+      <h2 class="display">Новые бумажки дороже старых</h2>
+      <div class="card quote">
+        <p>«Ситуация с дефицитом долларов нового образца в российских банках действительно имеет место. После прекращения официальных поставок наличной валюты из США банки в основном работают с теми запасами, которые остались в обороте — это в первую очередь старые купюры, выпущенные до 2013 года. Именно поэтому в обменниках и банкоматах сейчас практически не найти новые доллары, а если они и есть, то продаются с наценкой или по менее выгодному курсу», — <em><u><i>основатель инвестиционной компании SharesPro Денис Астафьев.</i></u> Газета.Ru</em></p>
+
+      </div>
+      <div class="card quote">
+        <p>«Хотя в России старые доллары в основном без проблем принимаются, за рубежом их чаще всего не берут в популярных туристических странах. Например, в Турции, ОАЭ, на Сейшелах, Маврикии или Шри-Ланке. Там могут либо вовсе не принять такие банкноты, либо предложить невыгодный курс», — <em><u><i>говорит Татьяна Волкова, финансовый консультант, главный эксперт Академии личных финансов.</i></u> РИА Новости</em></p>
+      </div>
+    </section>
+
+    <!-- 7. Roadmap -->
+    <!-- Слайд: Нововведения в редизайне -->
+    <section class="slide" aria-label="Features">
+      <div class="kicker">Безопасность • уровни</div>
+      <h2 class="display">Нововведения в редизайне</h2>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="bullet">
+            <div class="dot"></div>
+            <p><span><strong>Специальные материалы:</strong></span> переход на новые интаглио-прессы и электронные системы инспекции для создания высокоточных элементов, устойчивых к износу и подделкам, специальные чернила.
+</p>
+          </div>
+          <div class="bullet">
+            <div class="dot"></div>
+            <p><span><strong>Тактильные и визуальные эффекты:</strong></span> внедрение голографических элементов, которые создают 3D‑эффекты или меняют изображение при наклоне, а также усиленного эмбоссинга (рельефного тиснения) для создания текстур, проверяемых на ощупь и визуально.</p>
+          </div>
+
+          <div class="bullet">
+            <div class="dot"></div>
+            <p><span><strong>Усиление существующих элементов:</strong></span> водяные знаки, защитные нити, прозрачные окна. С использованием более сложных материалов и дизайнов, включая нити, видимые в ультрафиолете или меняющие цвет, и прозрачные окна с встроенными изображениями.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="bullet">
+            <div class="dot"></div>
+            <p><span><strong>Явные и скрытые уровни:</strong></span> новые банкноты включают множество уровней явных (overt) и скрытых (covert) элементов безопасности; разработка таких функций занимает более десяти лет исследований и разработок.</p>
+          </div>
+
+          <div class="bullet">
+            <div class="dot"></div>
+            <p><span><strong>Цифровая аутентификация:</strong></span> изучается возможность включения технологии цифровой аутентификации, таких как микрочипы или QR‑подобные коды, уже принятые другими международными валютами.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+  </div>
+
+  <div class="footer" aria-label="Footer">
+    <div class="progress" aria-label="Progress"><div class="bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const bar=document.querySelector('.progress .bar');
+  let i=0;
+  const go=idx=>{ i=Math.max(0,Math.min(slides.length-1,idx));
+    slides.forEach((el,k)=>el.classList.toggle('is-current',k===i));
+    if(bar) bar.style.width=((i+1)/slides.length)*100+'%';
+    history.replaceState(null,'','#'+(i+1));
+    const label=slides[i]?.getAttribute('aria-label')||`Слайд ${i+1}`; document.title=label+' — Dollar brief';
+  };
+  const next=()=>go(i+1), prev=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    const k=e.key.toLowerCase();
+    if(['arrowright',' '].includes(k)){e.preventDefault();next();}
+    if(k==='arrowleft'){e.preventDefault();prev();}
+    if(k==='p'){window.print();}
+  });
+  document.addEventListener('click',e=>{
+    const x=e.clientX, w=innerWidth;
+    if(x>w*0.66) next(); else if(x<w*0.34) prev();
+  });
+  let sx=null;
+  addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ dx<0?next():prev(); } sx=null; },{passive:true});
+  const h=location.hash.replace('#',''); const n=parseInt(h,10); go(isFinite(n)&&n>0?n-1:0);
+})();
+</script>
+</body>
+</html>
